@@ -2,12 +2,13 @@ import React from "react";
 import { useState } from "react";
 
 function App() {
+  const [keyword, setKeyword] = useState("");
   const [tracks, setTracks] = useState([]);
 
   const getTracks = async () => {
     // Fetch data from the Spotify API
     let data = await fetch(
-      "https://v1.nocodeapi.com/adam3301/spotify/CYNUfXqFQKJsWMiG/search?q=Ambient&type=track"
+      `https://v1.nocodeapi.com/adam3301/spotify/CYNUfXqFQKJsWMiG/search?q=${keyword}&type=track`
     );
 
     let tracksData = await data.json();
@@ -20,11 +21,15 @@ function App() {
     <>
       <div className="navbar bg-base-100">
         <div className="flex-1">
-          <a className="btn btn-ghost text-xl">daisyUI</a>
+          <a className="btn btn-ghost text-xl text-blue-800 font-bold font-serif">
+            YourMusic
+          </a>
         </div>
         <div className="flex-none gap-2">
           <div className="form-control">
             <input
+              value={keyword}
+              onChange={(e) => setKeyword(e.target.value)}
               type="text"
               placeholder="Search"
               className="input input-bordered"
@@ -44,10 +49,7 @@ function App() {
               className="btn btn-ghost btn-circle avatar"
             >
               <div className="w-10 rounded-full">
-                <img
-                  alt="Tailwind CSS Navbar component"
-                  src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
-                />
+                <img src="https://w7.pngwing.com/pngs/981/563/png-transparent-person-pinterest-profile-user-pinterest-ui-icon.png" />
               </div>
             </div>
             <ul
@@ -71,27 +73,28 @@ function App() {
         </div>
       </div>
 
-      <div>
-        <div className="cards columns-1 md:columns-2 lg:columns-3 xl:columns-4 p-4 gap-4 space-y-4 items-center">
+      {/* Cards */}
+
+      <div class="flex items-center justify-center min-h-screen container mx-auto">
+        <div className="cards columns-1 md:columns-2 lg:columns-3 xl:columns-4 p-4 gap-4 space-y-4">
           {tracks.map((element) => {
             return (
               <div
                 key={element.id}
-                className="main-card rounded-xl shadow-lg border-solid border-2 border-gray-300 break-inside-avoid"
+                class="main-card rounded-xl shadow-lg border-solid border-2 border-gray-300 break-inside-avoid"
               >
-                <figure className="px-10 pt-10">
-                  <img
-                    src={element.album.images[1].url}
-                    alt="Shoes"
-                    className="rounded-xl"
-                  />
-                </figure>
-                <div className="card-body items-center text-center">
-                  <h2 className="card-title">{element.name}</h2>
-                  <p>xyz</p>
-                  <div className="card-actions">
-                    <audio src={element.preview_url} controls></audio>
+                <div class="p-5 flex flex-col">
+                  <div class="rounded-xl overflow-hidden">
+                    <img src={element.album.images[1].url} alt="" />
                   </div>
+                  <h5 class="text-2xl font-medium mt-3 text-slate-800">
+                    {element.name}
+                  </h5>
+                  <audio
+                    className="mt-3"
+                    src={element.preview_url}
+                    controls
+                  ></audio>
                 </div>
               </div>
             );
