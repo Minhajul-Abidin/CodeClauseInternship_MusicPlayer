@@ -1,5 +1,4 @@
-import React from "react";
-import { useState } from "react";
+import React, { useState, useRef } from "react";
 
 function App() {
   const [keyword, setKeyword] = useState("");
@@ -15,6 +14,26 @@ function App() {
     console.log(tracksData.tracks.items);
 
     setTracks(tracksData.tracks.items);
+  };
+
+  // State to store the currently playing audio
+
+  const [playingAudio, setPlayingAudio] = useState(null); // Track currently playing audio
+  const audioRefs = useRef({}); // Ref object to store audio element references
+
+  const handlePlay = (id) => {
+    // Stop currently playing audio if it exists and it's different from the one being clicked
+    if (playingAudio && playingAudio !== id) {
+      audioRefs.current[playingAudio]?.pause();
+      audioRefs.current[playingAudio].currentTime = 0;
+    }
+
+    // Update the state with the new playing audio
+    if (audioRefs.current[id]) {
+      audioRefs.current[id].play();
+    }
+
+    setPlayingAudio(id);
   };
 
   return (
@@ -91,8 +110,10 @@ function App() {
                     {element.name}
                   </h5>
                   <audio
+                    ref={(ref) => (audioRefs.current[element.id] = ref)}
                     className="mt-3"
                     src={element.preview_url}
+                    onPlay={() => handlePlay(element.id)}
                     controls
                   ></audio>
                 </div>
