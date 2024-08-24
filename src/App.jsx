@@ -1,4 +1,5 @@
 import React, { useState, useRef } from "react";
+import Popup from "./components/Popup";
 
 function App() {
   const [keyword, setKeyword] = useState("");
@@ -36,6 +37,16 @@ function App() {
     setPlayingAudio(id);
   };
 
+  // Enter key press event handler
+  const handleKeyPress = (e) => {
+    if (e.key === "Enter") {
+      getTracks();
+    }
+  };
+
+  // PopUp
+  const [popUp, setPopUp] = useState(true);
+
   return (
     <>
       <div className="navbar bg-base-100">
@@ -44,11 +55,13 @@ function App() {
             YourMusic
           </a>
         </div>
+
         <div className="flex-none gap-2">
           <div className="form-control">
             <input
               value={keyword}
               onChange={(e) => setKeyword(e.target.value)}
+              onKeyDown={handleKeyPress}
               type="text"
               placeholder="Search"
               className="input input-bordered"
@@ -61,52 +74,43 @@ function App() {
             </button>
           </div>
 
-          <div className="dropdown dropdown-end">
-            <div
-              tabIndex={0}
-              role="button"
-              className="btn btn-ghost btn-circle avatar"
+          <div>
+            <button
+              onClick={() => {
+                setPopUp(true);
+              }}
+              className="btn bg-yellow-500"
             >
-              <div className="w-10 rounded-full">
-                <img src="https://w7.pngwing.com/pngs/981/563/png-transparent-person-pinterest-profile-user-pinterest-ui-icon.png" />
-              </div>
-            </div>
-            <ul
-              tabIndex={0}
-              className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow"
-            >
-              <li>
-                <a className="justify-between">
-                  Profile
-                  <span className="badge">New</span>
-                </a>
-              </li>
-              <li>
-                <a>Settings</a>
-              </li>
-              <li>
-                <a>Logout</a>
-              </li>
-            </ul>
+              Help!!!
+            </button>
           </div>
         </div>
       </div>
 
+      {/* PopUp */}
+      {popUp && (
+        <Popup
+          onClose={() => {
+            setPopUp(false);
+          }}
+        />
+      )}
+
       {/* Cards */}
 
-      <div class="flex items-center justify-center min-h-screen container mx-auto">
+      <div className="flex items-center justify-center min-h-screen container mx-auto">
         <div className="cards columns-1 md:columns-2 lg:columns-3 xl:columns-4 p-4 gap-4 space-y-4">
           {tracks.map((element) => {
             return (
               <div
                 key={element.id}
-                class="main-card rounded-xl shadow-lg border-solid border-2 border-gray-300 break-inside-avoid"
+                className="main-card rounded-xl shadow-lg border-solid border-2 border-gray-300 break-inside-avoid"
               >
-                <div class="p-5 flex flex-col">
-                  <div class="rounded-xl overflow-hidden">
+                <div className="p-5 flex flex-col">
+                  <div className="rounded-xl overflow-hidden">
                     <img src={element.album.images[1].url} alt="" />
                   </div>
-                  <h5 class="text-2xl font-medium mt-3 text-slate-800">
+                  <h5 className="text-2xl font-medium mt-3 text-slate-800">
                     {element.name}
                   </h5>
                   <audio
